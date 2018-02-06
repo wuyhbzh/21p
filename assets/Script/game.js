@@ -44,9 +44,17 @@ cc.Class({
         var moveBy = cc.moveBy(0.5, cc.p(100, 0));
         var moveBy1 = cc.moveBy(0.5, cc.p(-100,0));
         var callback = cc.callFunc(function () { 
-            this.BtnDeal.setVisible(true) 
+            this.BtnDeal.enabled = true;
+            this.BtnDeal.node.active = true;
         }.bind(this))
-        var callback1 = cc.callFunc(function () { this.BtnDeal.setVisible(false) }.bind(this))
+        var callback1 = cc.callFunc(function () { 
+            if (pIsShow){
+                this.BtnDeal.enabled = false; // 隐藏单个组件
+                this.BtnDeal.node.active = false; // 整个 node 的所有组件一起禁用 
+            }
+         }.bind(this))
+        this.BtnDeal.enabled = true;
+        this.BtnDeal.node.active = true;
         var seq = cc.sequence(callback, moveBy, moveBy1, callback1);
         this.BtnDeal.node.runAction(seq);
     },
@@ -58,7 +66,7 @@ cc.Class({
     onBtnChip(eventTouch, eventData) {
         var bet = parseInt(eventData);
         this.changeChip(bet);
-        this.showDealBtn(true);
+        this.showDealBtn(bet == 5);
     },
 
     update(dt) {
