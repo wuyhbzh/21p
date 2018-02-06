@@ -2,7 +2,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        time: 0.0,
         LabBet: {
             default: null,
             type: cc.Label
@@ -10,7 +9,11 @@ cc.Class({
         LabChip: {
             default: null,
             type: cc.Label
-        }
+        },
+        BtnDeal: {
+            default: null,
+            type: cc.Button
+        },
     },
 
     onLoad() {
@@ -37,6 +40,17 @@ cc.Class({
         this.LabChip.string = this.playerChip;
     },
 
+    showDealBtn(pIsShow) {
+        var moveBy = cc.moveBy(0.5, cc.p(100, 0));
+        var moveBy1 = cc.moveBy(0.5, cc.p(-100,0));
+        var callback = cc.callFunc(function () { 
+            this.BtnDeal.setVisible(true) 
+        }.bind(this))
+        var callback1 = cc.callFunc(function () { this.BtnDeal.setVisible(false) }.bind(this))
+        var seq = cc.sequence(callback, moveBy, moveBy1, callback1);
+        this.BtnDeal.node.runAction(seq);
+    },
+
     onBtnBack(event) {
         cc.director.loadScene('main')
     },
@@ -44,6 +58,7 @@ cc.Class({
     onBtnChip(eventTouch, eventData) {
         var bet = parseInt(eventData);
         this.changeChip(bet);
+        this.showDealBtn(true);
     },
 
     update(dt) {
