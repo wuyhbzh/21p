@@ -566,7 +566,7 @@
     },
     "component": "game",
     "handler": "onBtnCard",
-    "customEventData": ""
+    "customEventData": "2card"
   },
   {
     "__type__": "cc.Node",
@@ -712,7 +712,7 @@
     },
     "component": "game",
     "handler": "onBtnCard",
-    "customEventData": ""
+    "customEventData": "2score"
   },
   {
     "__type__": "cc.Node",
@@ -778,7 +778,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "064603ac-221b-4acc-9e23-2dbd38af0755"
+      "__uuid__": "362a4848-61e8-433b-9845-027e337740b5"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -844,7 +844,7 @@
       "a": 255
     },
     "_N$normalSprite": {
-      "__uuid__": "064603ac-221b-4acc-9e23-2dbd38af0755"
+      "__uuid__": "362a4848-61e8-433b-9845-027e337740b5"
     },
     "_N$disabledSprite": null,
     "_N$target": {
@@ -858,7 +858,7 @@
     },
     "component": "game",
     "handler": "onBtnCard",
-    "customEventData": ""
+    "customEventData": "getcard"
   },
   {
     "__type__": "cc.Node",
@@ -924,7 +924,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "362a4848-61e8-433b-9845-027e337740b5"
+      "__uuid__": "064603ac-221b-4acc-9e23-2dbd38af0755"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -990,7 +990,7 @@
       "a": 255
     },
     "_N$normalSprite": {
-      "__uuid__": "362a4848-61e8-433b-9845-027e337740b5"
+      "__uuid__": "064603ac-221b-4acc-9e23-2dbd38af0755"
     },
     "_N$disabledSprite": {
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
@@ -1006,7 +1006,7 @@
     },
     "component": "game",
     "handler": "onBtnCard",
-    "customEventData": ""
+    "customEventData": "stopcard"
   },
   {
     "__type__": "cc.Node",
@@ -2206,6 +2206,9 @@
       "__id__": 2
     },
     "_enabled": true,
+    "PreCard": {
+      "__uuid__": "99c481a2-0018-42e4-9fea-0377213bfe06"
+    },
     "LabBet": {
       "__id__": 49
     },

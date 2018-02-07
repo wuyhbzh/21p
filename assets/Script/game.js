@@ -4,6 +4,10 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        PreCard: {
+            default: null,
+            type: cc.Prefab
+        },
         LabBet: {
             default: null,
             type: cc.Label
@@ -136,9 +140,14 @@ cc.Class({
     },
 
     onBtnCard(eventTouch, eventData) {
-        this.mHandGameState = this.mHandGameStates.bet; // 测试代码
-        this.updateDealBtnShow();
-        this.updateBottomBtnsShow(this.mArrBetBtn_1);
+        // this.mHandGameState = this.mHandGameStates.bet; // 测试代码
+        // this.updateDealBtnShow();
+        // this.updateBottomBtnsShow(this.mArrBetBtn_1);
+        if("getcard" == eventData) {
+            var newcard = cc.instantiate(this.PreCard);
+            this.root.addChild(newcard);
+            newcard.getComponent('preCard').showCard();
+        }
     },
 
 });
