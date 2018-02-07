@@ -1,3 +1,5 @@
+var ccapi = require("ccapi")
+
 cc.Class({
     extends: cc.Component,
 
@@ -18,17 +20,19 @@ cc.Class({
 
     onLoad() {
         cc.log('game onLoad')
-        this.mNumPlayerBet= 0;
-        this.mNumPlayerChip = 1000;
-        this.mArrBottomBtns = ["BtnChip_5", "BtnChip_10", "BtnChip_25", "BtnChip_100"];
-        this.mArrBottomBtnPoints = [];
-        this.mHandGameState = "bet",
-        this.mHandGameStates = {
+        this.mNumPlayerBet= 0;  // 玩家下注数量
+        this.mNumPlayerChip = 1000; // 玩家手上筹码数量
+        this.mArrCardBtn = ["Btn2Card", "Btn2Score", "BtnCardGet", "BtnCardStop"];  // 分牌 双倍 拿牌 停牌 按钮
+        this.mArrBetBtn_1 = ["BtnChip_5", "BtnChip_10", "BtnChip_25", "BtnChip_100"];   // 下注按钮
+        this.mArrBetBtn_2 = ["BtnChip_10", "BtnChip_25", "BtnChip_500", "BtnChip_1000"];    // 下注按钮
+        this.mArrBottomBtns = this.mArrBetBtn_1;   // 底部展示出来的按钮
+        this.mArrBottomBtnPoints = [];  // 底部按钮的位置
+        this.mHandGameState = "bet",    // 当前游戏状态
+        this.mHandGameStates = {        // 游戏的所有状态
             "bet": "bet",
             "deal": "deal",
             "end": "end",
         }
-
         
         this.root = this.node.getChildByName("root");
         this.LabChip.string = this.mNumPlayerChip;
@@ -43,33 +47,27 @@ cc.Class({
     },
 
     start() {
-        cc.log('game start')
-        
-        
+        cc.log('game start') 
+        this.updateBottomBtnsShow(this.mArrBetBtn_1);
     },
+
+    update(dt) {
+        this.time += dt;
+    },
+
+    
+    // 逻辑 //
 
     changeChip(num) {
         this.mNumPlayerBet += num;
         this.mNumPlayerChip -= num;
         this.LabBet.string = this.mNumPlayerBet;
         this.LabChip.string = this.mNumPlayerChip;
-
-        if (5 == num)
-            this.showBottomBtns(["BtnChip_5", "BtnChip_10", "BtnChip_25", "BtnChip_100"]);
-        
-        if (100 == num)
-            this.showBottomBtns(["BtnChip_5", "BtnChip_100", "BtnChip_500", "BtnChip_1000"]);
-
     },
 
-    showBottomBtns(pArrShowBottomBtns) {
+    updateBottomBtnsShow(pArrShowBottomBtns) {
         var moveTime = 0.5, offx = 0, offy = this.mBottomOffY;
         var delayTime = 0;
-
-        var moveAction = function(node, time, offx,  offy) {
-            var moveBy = cc.moveBy(time, cc.p(offx, offy));
-            node.runAction(moveBy);
-        }
 
         var doAction = function (nodesName, time, offx, offy) {
             for (var i in nodesName) {
@@ -79,7 +77,7 @@ cc.Class({
                     btn.position = this.mArrBottomBtnPoints[i];
                     btn.y -= offy
                 }
-                if (btn) moveAction(btn, time, offx, offy);
+                if (btn) ccapi.moveOff(btn, time, offx, offy);
             }
         }.bind(this);
         
@@ -97,23 +95,28 @@ cc.Class({
         
     },
 
-    showDealBtn(pIsShow) {
-        // var moveBy = cc.moveBy(0.5, cc.p(100, 0));
-        // var moveBy1 = cc.moveBy(0.5, cc.p(-100,0));
-        // var callback = cc.callFunc(function () { 
-        //     this.BtnDeal.enabled = true;
-        //     this.BtnDeal.node.active = true;
-        // }.bind(this))
-        // var callback1 = cc.callFunc(function () { 
-        //     if (pIsShow){
-        //         this.BtnDeal.enabled = false; // 隐藏单个组件
-        //         this.BtnDeal.node.active = false; // 整个 node 的所有组件一起禁用 
-        //     }
-        //  }.bind(this))
-        // this.BtnDeal.enabled = true;
-        // this.BtnDeal.node.active = true;
-        // var seq = cc.sequence(callback, moveBy, moveBy1, callback1);
-        // this.BtnDeal.node.runAction(seq);
+    updateDealBtnShow() {
+        var nowIsShow = this.BtnDeal.enabled;
+
+        if(this.mHandGameState == this.mHandGameStates.bet) {
+            if (this.mNumPlayerBet > 0 && nowIsShow == false) {
+                this.BtnDeal.enabled = true; // 显示单个组件 为true才会执行 moveOff的动作
+                this.BtnDeal.node.active = true; // 整个 node 的所有组件一起禁用 
+                ccapi.moveOff(this.BtnDeal.node, 0.5, -100, 0);
+            } else if (this.mNumPlayerBet <= 0 && nowIsShow) {
+
+            }
+
+        } else if (this.mHandGameState == this.mHandGameStates.deal) {
+            ccapi.moveOff(this.BtnDeal.node, 0.5, 100, 0);
+            var delayCallBack = function () {
+                this.BtnDeal.enabled = false;
+                this.BtnDeal.node.active = false;
+            }.bind(this)
+            this.scheduleOnce(delayCallBack, 0.5);
+
+
+        }
     },
 
     onBtnBack(event) {
@@ -123,14 +126,19 @@ cc.Class({
     onBtnChip(eventTouch, eventData) {
         var bet = parseInt(eventData);
         this.changeChip(bet);
-        this.showDealBtn(bet == 5);
+        this.updateDealBtnShow();
     },
 
-    onCardBtn(eventTouch, eventData) {
-
+    onBtnDeal(eventTouch, eventData) {
+        this.mHandGameState = this.mHandGameStates.deal;
+        this.updateDealBtnShow();
+        this.updateBottomBtnsShow(this.mArrCardBtn);
     },
 
-    update(dt) {
-        this.time+=dt;
+    onBtnCard(eventTouch, eventData) {
+        this.mHandGameState = this.mHandGameStates.bet; // 测试代码
+        this.updateDealBtnShow();
+        this.updateBottomBtnsShow(this.mArrBetBtn_1);
     },
+
 });
