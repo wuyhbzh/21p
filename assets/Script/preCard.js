@@ -3,6 +3,10 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        AtlasCard: {
+            default: null,
+            type: cc.SpriteAtlas
+        },
     },
 
     onLoad () {
@@ -15,6 +19,8 @@ cc.Class({
 
     showCard (num) {
         cc.log('show card');
+        var spriteNode = this.node.getComponent('cc.Sprite')
+        spriteNode.spriteFrame = this.AtlasCard.getSpriteFrame("card_101");
     },
     // update (dt) {},
 });
