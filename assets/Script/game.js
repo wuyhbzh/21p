@@ -81,7 +81,7 @@ cc.Class({
                     btn.position = this.mArrBottomBtnPoints[i];
                     btn.y -= offy
                 }
-                if (btn) ccapi.moveOff(btn, time, offx, offy);
+                if (btn) gg.api.moveOff(btn, time, offx, offy);
             }
         }.bind(this);
         
@@ -106,13 +106,13 @@ cc.Class({
             if (this.mNumPlayerBet > 0 && nowIsShow == false) {
                 this.BtnDeal.enabled = true; // 显示单个组件 为true才会执行 moveOff的动作
                 this.BtnDeal.node.active = true; // 整个 node 的所有组件一起禁用 
-                ccapi.moveOff(this.BtnDeal.node, 0.5, -100, 0);
+                gg.api.moveOff(this.BtnDeal.node, 0.5, -100, 0);
             } else if (this.mNumPlayerBet <= 0 && nowIsShow) {
 
             }
 
         } else if (this.mHandGameState == this.mHandGameStates.deal) {
-            ccapi.moveOff(this.BtnDeal.node, 0.5, 100, 0);
+            gg.api.moveOff(this.BtnDeal.node, 0.5, 100, 0);
             var delayCallBack = function () {
                 this.BtnDeal.enabled = false;
                 this.BtnDeal.node.active = false;
@@ -121,6 +121,10 @@ cc.Class({
 
 
         }
+    },
+
+    addHandCard() {
+
     },
 
     onBtnBack(event) {
@@ -140,13 +144,10 @@ cc.Class({
     },
 
     onBtnCard(eventTouch, eventData) {
-        // this.mHandGameState = this.mHandGameStates.bet; // 测试代码
-        // this.updateDealBtnShow();
-        // this.updateBottomBtnsShow(this.mArrBetBtn_1);
         if("getcard" == eventData) {
             var newcard = cc.instantiate(this.PreCard);
             this.root.addChild(newcard);
-            newcard.getComponent('preCard').showCard();
+            newcard.getComponent('preCard').showCard(101);
         }
     },
 
